@@ -1,6 +1,4 @@
----
 ##getting started##
----
 
     rails new MySite
     bundle install
@@ -80,21 +78,20 @@ goto `config/routes.rb` again:
 in `app/views/messages/index.html.erb`
 
     <div class="header">
-      <div class="container">
-        <img src="http://s3.amazonaws.com/codecademy-content/courses/learn-rails/img/logo-1m.svg">
-        <h1>Messenger</h1>
-      </div>
+        <div class="container">
+            <img src="http://s3.amazonaws.com/codecademy-content/courses/learn-rails/img/logo-1m.svg">
+            <h1>Messenger</h1>
+        </div>
     </div>
     <div class="messages">
-      <div class="container">
-      
-        <% @messages.each do |message| %> 
-            <div class="message"> 
-                <p class="content"><%= message.content %></p> 
-                <p class="time"><%= message.created_at %></p> 
-            </div> 
-        <% end %>
-      </div>
+        <div class="container">
+            <% @messages.each do |message| %> 
+                <div class="message"> 
+                    <p class="content"><%= message.content %></p> 
+                    <p class="time"><%= message.created_at %></p> 
+                </div> 
+            <% end %>
+        </div>
     </div>
 
 the result is at <http://localhost:8000/messages>
