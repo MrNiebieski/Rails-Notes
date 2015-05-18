@@ -59,7 +59,7 @@ then run:
 
     rails generate controller Messages
 
-write the following code in `app/controllers/messages_controller.rb`
+write the following code in `app/controllers/messages_controller.rb`:
 
 
     class MessagesController < ApplicationController
@@ -85,13 +85,55 @@ in `app/views/messages/index.html.erb`
     </div>
     <div class="messages">
         <div class="container">
-            <% @messages.each do |message| %> 
-                <div class="message"> 
-                    <p class="content"><%= message.content %></p> 
-                    <p class="time"><%= message.created_at %></p> 
-                </div> 
+            <% @messages.each do |message| %>
+                <div class="message">
+                    <p class="content"><%= message.content %></p>
+                    <p class="time"><%= message.created_at %></p>
+                </div>
             <% end %>
         </div>
     </div>
 
 the result is at <http://localhost:8000/messages>
+
+in `config/routes.rb`:
+
+    get 'messages/new' => 'messages#new'
+    post 'messages' => 'messages#create'
+
+
+in `app/controllers/messages_controller.rb`:
+
+        def new
+            @message = Message.new
+        end
+
+        def create
+            @message = Message.new(message_params)
+            if @message.save
+                redirect_to '/messages'
+            else
+                render 'new'
+            end
+        end
+
+        private
+        def message_params
+            params.require(:message).permit(:content)
+        end
+
+in view file `app/views/messages/new.html.erb` add:
+
+    <%= form_for(@message) do |f| %>
+          <div class="field">
+            <%= f.label :message %><br>
+            <%= f.text_area :content %>
+          </div>
+          <div class="actions">
+            <%= f.submit "Create" %>
+          </div>
+    <% end %>
+
+in view file `app/views/messages/index.html.erb` add:
+
+    <%= link_to 'New Message', "messages/new" %>
