@@ -55,7 +55,7 @@ then run:
     rake db:migrate
     rake db:seed
 
-`rake db:seed` sdds the database with sample data from `db/seeds.rb`
+`rake db:seed` seeds the database with sample data from `db/seeds.rb`
 
     rails generate controller Messages
 
