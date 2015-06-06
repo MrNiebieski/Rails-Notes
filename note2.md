@@ -76,3 +76,21 @@ controller:
     end
 
 `bundle exec` excute a script in the context of the current bundle.
+
+##Associations##
+
+no foreign key: `has_many`
+
+with foreign key: `belongs_to`
+
+connect models
+
+`has_many: <comments>, dependent: :destroy`
+
+`rails console`
+
+
+`rake routes`
+
+
+    validates_presence_of : <name>
