@@ -119,3 +119,171 @@ layout contains templates
 <%end %>
 
 method: :delete
+
+`twwets_controller.rb`
+
+convention over configuration.
+
+
+    class TweetsController < ApplicationController
+        def show
+        end
+    end
+
+
+`/app/views/tweets/show.html.erb`
+
+
+`@tweet` instant variable (scope)
+
+
+    render action: 'status'
+
+->`/app/views/tweets/status.html.erb`
+
+`params = {id: "1"}`
+
+`Tweet.find(params[:id])`
+
+`/tweets?tweet[status]=hello`
+
+    @tweet = Tweet.create(status: params[:status])
+    @tweet = Tweet.create(status: params[:tweet][:status])
+    @tweet = Tweet.create(params[:tweet])
+
+_Strong Parameters_ (Rails 4)
+
+required only 
+
+    require(:tweet)
+    permit(:status)
+
+    @tweet = Tweet.create(params.require(:tweet).permit(:status))
+
+send in an array
+
+    params.require(:tweet).permit([:status, :location])
+
+
+    class TweetsController < ApplicationController
+        def show
+            @tweet = Tweet.find(params[:id])
+            respond_to do |format|
+                format.html  #show.html.erb
+                format.json { render json: @tweet}
+        end
+    end
+
+
+    if session[:user_id] !=  @tweet.user_id
+        flash[:notice] = "sorry, you can't edit this"
+        redirect_to(tweets_path)
+    end
+
+
+    class TweetsController < ApplicationController
+      def create
+        @tweet = Tweet.create(tweet_params)
+        redirect_to tweet_path(@tweet)
+      end
+      private
+      def tweet_params
+        params.require(:tweet).permit(:name, :status)
+      end
+
+`flash` is a helper
+
+alternatively combine `flash` and `redirect_to`
+
+    redirect_to(tweets_pah,
+        notice: "sorry, you can't edit this")
+
+to show the `flash`, in `/app/views/layouts/application.html.erb`
+
+    <% if flash[:notice] %>
+        <div id="notice"><%= flash[:notice] %></div>
+    <% end %>
+    <% end %>
+    <%= yield %>
+
+
+all `edit`, `update` and `destroy` need authorization
+
+    class TweetsController < ApplicationController
+        before_action :get_tweet, only:[:edit, :update, :destroy]
+        before_action :check_auth, only:[:edit, :update, :destroy]
+        def get_tweet
+            @tweet = Tweet.find(params[:id])
+        end
+        def check_auth
+            if session[:user_id] !=  @tweet.user_id
+                flash[:notice] = "sorry, you can't edit this"
+                redirect_to(tweets_path)
+            end
+        end
+        ...
+
+
+###routes##
+
+in `/config/routes.rb`
+
+    ZombieTwitter::Application.routes.draw do
+        resources :tweets
+        get '/new_tweet' =>'tweets#new'
+
+
+in `'tweets#new'`, `tweets` is `Controller` and `new` is `Action`
+
+
+    get '/new_tweet' =>'tweets#new', as: 'all_tweets'
+
+    <% link_to "All Tweets", all_tweets_path %>
+
+
+_Redirect_
+
+    get '/all' => redirect('/tweets')
+
+
+_Root Route_
+
+    root to: "tweets#index"
+    <%= link_to "All Tweets", root_path %>
+
+
+    def index
+        if params[:zipcode]
+            @tweets = Tweet.where(zipcoe: params[:zipcode])
+        else
+            @tweets = Tweet.all
+        end
+        respond_to do |format|
+            format.html #index.html.erb
+            format.xml {render xml: @tweets}
+        end
+    end
+
+_Route Parameters_
+
+    get '/local_tweets/:zipcode' => 'tweets#index'
+
+    get '/local_tweets/:zipcode' => 'tweets#index', as: 'local_tweets'
+
+then
+
+    <%= link_to "Tweets in 95112", local_tweets_path(95112) %>
+
+if only html, then don't need write `respond_to`
+
+`Action Pack`
+
+`Active Record` (design pattern) is the `M` in `MVC`
+
+    Post.find_by_title("My Frist Post")
+
+RoR can understand this.
+
+    $rails console
+
+(`irb` with `rails` preloaded)
