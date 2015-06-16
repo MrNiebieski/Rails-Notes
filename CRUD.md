@@ -287,3 +287,112 @@ RoR can understand this.
     $rails console
 
 (`irb` with `rails` preloaded)
+
+
+_authentication_
+
+5 parts
+
+1. model
+2. controller
+3. views
+4. routes
+5. logic
+
+
+
+    has\_secure\_password
+
+    gem 'bcrypt', '~> 3.1.7'
+
+
+    class CreateUsers < ActiveRecord::Migration
+      def change
+        create_table :users do |t|
+          t.string :first_name
+          t.string :last_name
+          t.string :email
+          t.string :password_digest
+          t.timestamps
+        end
+      end
+    end
+
+
+    get 'signup' => 'users#new'
+    resources :users
+
+
+placeholder style
+
+
+    <%= form_for(@user) do |f| %>
+      <%= f.text\_field :first_name, :placeholder => "First name" %>
+      <%= f.text\_field :last_name, :placeholder => "Last name" %>
+      <%= f.email_field :email, :placeholder => "Email" %>
+      <%= f.password_field :password, :placeholder => "Password" %>
+      <%= f.submit "Create an account", class: "btn-submit" %>
+    <% end %>
+
+
+    private
+        def user_params
+        params.require(:user).permit(:first_name, :last_name, :email, :password)
+    end
+
+
+    def create 
+        @user = User.new(user_params) 
+        if @user.save 
+            session[:user_id] = @user.id 
+            redirect_to '/' 
+        else 
+            redirect_to '/signup' 
+        end 
+    end
+
+
+
+    <%= form_for(:session, url: login_path) do |f| %> 
+      <%= f.email_field :email, :placeholder => "Email" %> 
+      <%= f.password_field :password, :placeholder => "Password" %> 
+      <%= f.submit "Log in", class: "btn-submit" %>
+    <% end %>
+
+
+
+    def create
+        @user = User.find_by_email(params[:session][:email])
+        if @user && @user.authenticate(params[:session][:password])
+            session[:user_id] = @user.id
+            redirect_to '/'
+        else
+            redirect_to 'login'
+        end 
+    end
+
+    def destroy 
+        session[:user_id] = nil 
+        redirect_to '/' 
+    end
+
+
+this is in `app/controllers/application_controller.rb`
+
+
+    helper_method :current_user 
+
+    def current_user 
+      @current_user ||= User.find(session[:user_id]) if session[:user_id] 
+    end
+
+    def require_user 
+        redirect_to '/login' unless current_user 
+    end
+
+then in other `controller`
+
+    before_action :require_user, only: [:index, :show]
+
+in `app/views/layouts/application.html.erb`
+
