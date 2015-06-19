@@ -300,6 +300,12 @@ _authentication_
 5. logic
 
 
+1. in `model` there is `Post` class, associated with database called `posts`
+2. RESTful controller called `posts_controller`
+3. a `posts` view
+4. Test fixtures
+
+
 
     has\_secure\_password
 
@@ -396,3 +402,18 @@ then in other `controller`
 
 in `app/views/layouts/application.html.erb`
 
+
+
+    class BookController < ApplicationController
+        layout 'standard'
+        def list
+            @books = Book.find(:all)
+        end
+        ...
+
+this will load `/app/views/layouts/standard.html.erb`
+
+
+    rails -d mysql cookbook
+
+this will use `mysql`, otherwise rails will use `SQLite`
