@@ -137,3 +137,5 @@ in view file `app/views/messages/new.html.erb` add:
 in view file `app/views/messages/index.html.erb` add:
 
     <%= link_to 'New Message', "messages/new" %>
+
+By giving the edit route a name of "edit\_destination", Rails automatically creates a helper method named edit\_destination\_path. Use it to generate a URL to a specific destination's edit path.
