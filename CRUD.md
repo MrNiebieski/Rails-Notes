@@ -120,7 +120,7 @@ layout contains templates
 
 method: :delete
 
-`twwets_controller.rb`
+`tweets_controller.rb`
 
 convention over configuration.
 
@@ -303,11 +303,11 @@ _authentication_
 1. in `model` there is `Post` class, associated with database called `posts`
 2. RESTful controller called `posts_controller`
 3. a `posts` view
-4. Test fixtures
+4. Test has
 
 
 
-    has\_secure\_password
+    fixtures\_secure\_password
 
     gem 'bcrypt', '~> 3.1.7'
 

@@ -40,7 +40,7 @@ allowed basic data types:
 * timestamp & datetime
 * date & time
 * binary
-* bolean
+* boolean
 
 
 route is written as something like:
@@ -94,3 +94,8 @@ connect models
 
 
     validates_presence_of : <name>
+
+
+rollback to the very begining
+
+    rake db:migrate VERSION=0

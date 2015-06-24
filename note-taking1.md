@@ -66,3 +66,7 @@ this is an example of `:foreign_key`
 
     has_many :votes, dependent: :destroy
 
+
+    @topic.votes.create
+
+    <td><%= button_to '+1', upvote_topic_path(topic), method: :post %></td>

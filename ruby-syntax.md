@@ -58,3 +58,10 @@ also support `?:`
     until condition do
         body
     end
+
+
+nice trick:
+
+    "1,2,3,4".split(",").map(&:to_i)
+    [1, 2, 3, 4].join(",")
+    [1, 2, 3, 4].join(",").split(",").map(&:to_i)
